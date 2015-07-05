@@ -29,24 +29,24 @@ class Item(models.Model):
     suppliers = models.ManyToManyField(Supplier, through='ItemSupplier')
     def total_stock(self):
         sum = 0
-        for x in ItemLocation.objects.exclude(location__location='On-delivery'):
+        for x in ItemLocation.objects.filter(item__id = self.id).exclude(location__location='On-delivery'):
             sum += x.number_stored
         return sum
     def stock_available(self):
         sum = 0
-        for x in ItemLocation.objects.exclude(location__location='On-delivery').exclude(location__location__startswith='On-loan'):
+        for x in ItemLocation.objects.filter(item__id = self.id).exclude(location__location='On-delivery').exclude(location__location__startswith='On-loan'):
             sum += x.number_stored
         return sum
 
     def on_delivery(self):
         sum = 0
-        for x in ItemLocation.objects.filter(location__location='On-delivery'):
+        for x in ItemLocation.objects.filter(item__id = self.id).filter(location__location='On-delivery'):
             sum += x.number_stored
         return sum
 
     def on_loan(self):
         sum = 0
-        for x in ItemLocation.objects.filter(location__location__startswith='On-loan'):
+        for x in ItemLocation.objects.filter(item__id = self.id).filter(location__location__startswith='On-loan'):
             sum += x.number_stored
         return sum
 
