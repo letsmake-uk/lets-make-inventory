@@ -27,6 +27,11 @@ class Item(models.Model):
     locations = models.ManyToManyField(Location, through='ItemLocation')
     owners = models.ManyToManyField(Owner, through='Ownership')
     suppliers = models.ManyToManyField(Supplier, through='ItemSupplier')
+    def total_items(self):
+        sum = 0
+        for x in ItemLocation.objects.all():
+            sum += x.number_stored
+        return sum
 
     def __unicode__(self):
         return self.name
