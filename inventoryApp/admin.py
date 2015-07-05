@@ -28,6 +28,7 @@ class ItemSupplierInline(admin.TabularInline):
 
 class ItemAdmin(admin.ModelAdmin):
     inlines = [ItemLocationInline, ItemSupplierInline, OwnershipInline]
+    list_display = ('name', 'total_items')
 
 admin.site.register(Location)
 
