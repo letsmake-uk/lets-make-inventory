@@ -2,7 +2,7 @@ from django.db import models
 
 # Basic objects, without relationships
 class Location(models.Model):
-    location = models.CharField('Last location', max_length=100)
+    location = models.CharField(max_length=100)
     
     def __unicode__(self):
         return self.location
@@ -27,9 +27,14 @@ class Item(models.Model):
     locations = models.ManyToManyField(Location, through='ItemLocation')
     owners = models.ManyToManyField(Owner, through='Ownership')
     suppliers = models.ManyToManyField(Supplier, through='ItemSupplier')
-    def total_items(self):
+    def total_stock(self):
         sum = 0
         for x in ItemLocation.objects.all():
+            sum += x.number_stored
+        return sum
+    def stock_available(self):
+        sum = 0
+        for x in ItemLocation.objects.exclude(location__location__startswith='On'):
             sum += x.number_stored
         return sum
 

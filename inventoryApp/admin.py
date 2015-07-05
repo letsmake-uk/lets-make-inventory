@@ -28,7 +28,7 @@ class ItemSupplierInline(admin.TabularInline):
 
 class ItemAdmin(admin.ModelAdmin):
     inlines = [ItemLocationInline, ItemSupplierInline, OwnershipInline]
-    list_display = ('name', 'total_items')
+    list_display = ('name', 'total_stock', 'stock_available')
 
 admin.site.register(Location)
 
