@@ -31,10 +31,10 @@ class Item(models.Model):
         us = ['Louis', 'Nic', 'Lets Make']
         sum = 0
         ondel = 0
-        for member in us:
-            owns = Ownership.objects.filter(
-                item__id = self.id).filter(
-                owner__name__in = us).get()
+        ours = Ownership.objects.filter(
+            item__id = self.id).filter(
+            owner__name__in = us)
+        for owns in ours:
             number = owns.number_owned
             sum += number
             ondel += owns.on_delivery
@@ -43,11 +43,10 @@ class Item(models.Model):
     def available(self):
         us = ['Louis', 'Nic', 'Lets Make']
         sum = 0
-        not_ours = Ownership.objects.all()
-        for member in us:
-            not_ours = not_ours.filter(
-                item__id = self.id).exclude(
-                owner__name__in = us)
+        ondel = 0
+        not_ours = Ownership.objects.filter(
+            item__id = self.id).exclude(
+            owner__name__in = us)
         for owns in not_ours:
             number = owns.number_owned
             sum += number
