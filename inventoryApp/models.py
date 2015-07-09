@@ -27,31 +27,32 @@ class Item(models.Model):
     locations = models.ManyToManyField(Location, through='ItemLocation')
     owners = models.ManyToManyField(Owner, through='Ownership')
     suppliers = models.ManyToManyField(Supplier, through='ItemSupplier')
+    us = ['Louis', 'Nic', 'Lets Make']
     def ours(self):
-        us = ['Louis', 'Nic', 'Lets Make']
         sum = 0
         ondel = 0
         ours = Ownership.objects.filter(
             item__id = self.id).filter(
-            owner__name__in = us)
+            owner__name__in = self.us)
         for owns in ours:
             number = owns.number_owned
             sum += number
             ondel += owns.on_delivery
-        return (sum, ondel)
+        return '%i (%i)' % (sum, ondel)
+    ours.short_description = 'Ours (on-delivery)'
 
-    def available(self):
-        us = ['Louis', 'Nic', 'Lets Make']
+    def can_borrow(self):
         sum = 0
         ondel = 0
         not_ours = Ownership.objects.filter(
             item__id = self.id).exclude(
-            owner__name__in = us)
+            owner__name__in = self.us)
         for owns in not_ours:
             number = owns.number_owned
             sum += number
             ondel += owns.on_delivery
-        return (sum, ondel)
+        return '%i (%i)' % (sum, ondel)
+    can_borrow.short_description = 'Others\'s items (on-delivery)'
 
 # class Event(models.Model):
 #     name = models.CharField(max_length=100)
@@ -68,15 +69,14 @@ class ItemLocation(models.Model):
     number_stored = models.IntegerField(default = 0)
 
     def __unicode__(self):
-        return self.item.name
-
+        return self.location.location
 
 class Ownership(models.Model):
     owner = models.ForeignKey(Owner)
     item = models.ForeignKey(Item)
     number_owned = models.IntegerField(default = 0)
     on_delivery = models.IntegerField(default = 0)
-    in_use = models.IntegerField(default = 0)
+#    in_use = models.IntegerField(default = 0)
 
     def __unicode__(self):
         return self.owner.name
@@ -90,7 +90,7 @@ class ItemSupplier(models.Model):
     max_del = models.CharField('Max delivery time', max_length=100, blank = True)
 
     def __unicode__(self):
-        return self.item.name
+        return self.supplier.name
 
 # class EventStock(models.Model):
 #     item = models.ForeignKey(Item)
