@@ -28,7 +28,7 @@ class ItemSupplierInline(admin.TabularInline):
 
 class ItemAdmin(admin.ModelAdmin):
     inlines = [ItemLocationInline, ItemSupplierInline, OwnershipInline]
-    list_display = ('name', 'total', 'available', 'in_use', 'on_delivery')
+    list_display = ('name', 'ours', 'available')
 
 admin.site.register(Location)
 

@@ -27,31 +27,32 @@ class Item(models.Model):
     locations = models.ManyToManyField(Location, through='ItemLocation')
     owners = models.ManyToManyField(Owner, through='Ownership')
     suppliers = models.ManyToManyField(Supplier, through='ItemSupplier')
-    def total(self):
+    def ours(self):
+        us = ['Louis', 'Nic', 'Lets Make']
         sum = 0
-        for x in ItemLocation.objects.filter(item__id = self.id).exclude(location__location='On-delivery'):
-            sum += x.number_stored
-        return sum
+        ondel = 0
+        for member in us:
+            owns = Ownership.objects.filter(
+                item__id = self.id).filter(
+                owner__name__in = us).get()
+            number = owns.number_owned
+            sum += number
+            ondel += owns.on_delivery
+        return (sum, ondel)
+
     def available(self):
+        us = ['Louis', 'Nic', 'Lets Make']
         sum = 0
-        for x in ItemLocation.objects.filter(item__id = self.id).exclude(location__location='On-delivery').exclude(location__location__startswith='In-use'):
-            sum += x.number_stored
-        return sum
-
-    def on_delivery(self):
-        sum = 0
-        for x in ItemLocation.objects.filter(item__id = self.id).filter(location__location='On-delivery'):
-            sum += x.number_stored
-        return sum
-
-    def in_use(self):
-        sum = 0
-        for x in ItemLocation.objects.filter(item__id = self.id).filter(location__location__startswith='In-use'):
-            sum += x.number_stored
-        return sum
-
-    def __unicode__(self):
-        return self.name
+        not_ours = Ownership.objects.all()
+        for member in us:
+            not_ours = not_ours.filter(
+                item__id = self.id).exclude(
+                owner__name__in = us)
+        for owns in not_ours:
+            number = owns.number_owned
+            sum += number
+            ondel += owns.on_delivery
+        return (sum, ondel)
 
 # class Event(models.Model):
 #     name = models.CharField(max_length=100)
@@ -75,6 +76,8 @@ class Ownership(models.Model):
     owner = models.ForeignKey(Owner)
     item = models.ForeignKey(Item)
     number_owned = models.IntegerField(default = 0)
+    on_delivery = models.IntegerField(default = 0)
+    in_use = models.IntegerField(default = 0)
 
     def __unicode__(self):
         return self.owner.name
