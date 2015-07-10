@@ -28,11 +28,16 @@ class ItemSupplierInline(admin.TabularInline):
     model = ItemSupplier
     extra = 0
 
+class EventStockInline(admin.TabularInline):
+    model = EventStock
+    extra = 0
+
 class ItemAdmin(admin.ModelAdmin):
     inlines = [OwnershipInline, ItemLocationInline, ItemSupplierInline]
     list_display = ('name', 'ours', 'can_borrow')
 
 class EventAdmin(admin.ModelAdmin):
+    inlines = [EventStockInline]
     list_display = ('name', 'place', 'start_date', 'end_date')
 
 admin.site.register(Location)
