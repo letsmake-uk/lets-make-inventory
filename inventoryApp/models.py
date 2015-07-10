@@ -98,13 +98,8 @@ class ItemSupplier(models.Model):
         return self.supplier.name
 
 class EventStock(models.Model):
-    item = models.ForeignKey(Item)
     event = models.ForeignKey(Event)
-    supplier = models.ForeignKey(Supplier)
-    link = models.URLField('Link to item page', max_length=100, blank = True)
-    part = models.CharField('Part No.', max_length=50, blank = True)
-    ppu = models.FloatField('Price per unit')
-    max_del = models.CharField('Max delivery time', max_length=100, blank = True)
+    item = models.ForeignKey(Item)
 
     def __unicode__(self):
         return self.item.name

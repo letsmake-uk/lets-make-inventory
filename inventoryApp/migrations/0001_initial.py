@@ -11,6 +11,23 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='Event',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=100)),
+                ('place', models.CharField(max_length=200)),
+                ('start_date', models.DateField(blank=True)),
+                ('end_date', models.DateField(verbose_name=b'End date (Optional)', blank=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='EventStock',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('event', models.ForeignKey(to='inventoryApp.Event')),
+            ],
+        ),
+        migrations.CreateModel(
             name='Item',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -42,7 +59,7 @@ class Migration(migrations.Migration):
             name='Location',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('location', models.CharField(max_length=100, verbose_name=b'Last location')),
+                ('location', models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
@@ -58,6 +75,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('number_owned', models.IntegerField(default=0)),
+                ('on_delivery', models.IntegerField(default=0)),
                 ('item', models.ForeignKey(to='inventoryApp.Item')),
                 ('owner', models.ForeignKey(to='inventoryApp.Owner')),
             ],
@@ -94,5 +112,20 @@ class Migration(migrations.Migration):
             model_name='item',
             name='suppliers',
             field=models.ManyToManyField(to='inventoryApp.Supplier', through='inventoryApp.ItemSupplier'),
+        ),
+        migrations.AddField(
+            model_name='eventstock',
+            name='item',
+            field=models.ForeignKey(to='inventoryApp.Item'),
+        ),
+        migrations.AddField(
+            model_name='event',
+            name='items',
+            field=models.ManyToManyField(to='inventoryApp.Item', through='inventoryApp.EventStock'),
+        ),
+        migrations.AddField(
+            model_name='event',
+            name='organisation',
+            field=models.ManyToManyField(to='inventoryApp.Owner'),
         ),
     ]
