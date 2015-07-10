@@ -54,12 +54,17 @@ class Item(models.Model):
         return '%i (%i)' % (sum, ondel)
     can_borrow.short_description = 'Others\'s items (on-delivery)'
 
-# class Event(models.Model):
-#     name = models.CharField(max_length=100)
-#     place = models.CharField(max_length= 200)
-#     start_date = models.DateField()
-#     end_date = models.DateField('End date (Optional)', blank=True)
-#     items = models.ManyToManyField(Item, through='EventStock')
+class Event(models.Model):
+    name = models.CharField(max_length=100)
+    place = models.CharField(max_length= 200)
+    start_date = models.DateField(blank=True)
+    end_date = models.DateField('End date (Optional)', blank=True)
+    items = models.ManyToManyField(Item, through='EventStock')
+    organisation = models.ManyToManyField(Owner)
+    def org(self):
+        return self.organisation.name
+    def __unicode__(self):
+        return self.name
 
 # Relationship objects
 class ItemLocation(models.Model):
@@ -92,13 +97,14 @@ class ItemSupplier(models.Model):
     def __unicode__(self):
         return self.supplier.name
 
-# class EventStock(models.Model):
-#     item = models.ForeignKey(Item)
-#     supplier = models.ForeignKey(Supplier)
-#     link = models.URLField('Link to item page', max_length=100, blank = True)
-#     part = models.CharField('Part No.', max_length=50, blank = True)
-#     ppu = models.FloatField('Price per unit')
-#     max_del = models.CharField('Max delivery time', max_length=100, blank = True)
+class EventStock(models.Model):
+    item = models.ForeignKey(Item)
+    event = models.ForeignKey(Event)
+    supplier = models.ForeignKey(Supplier)
+    link = models.URLField('Link to item page', max_length=100, blank = True)
+    part = models.CharField('Part No.', max_length=50, blank = True)
+    ppu = models.FloatField('Price per unit')
+    max_del = models.CharField('Max delivery time', max_length=100, blank = True)
 
-#    def __unicode__(self):
-#        return self.item.name
+    def __unicode__(self):
+        return self.item.name

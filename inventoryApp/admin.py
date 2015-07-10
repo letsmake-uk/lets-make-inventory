@@ -13,6 +13,8 @@ from .models import ItemLocation
 from .models import Supplier
 
 from .models import ItemSupplier
+from .models import Event
+from .models import EventStock
 
 class ItemLocationInline(admin.TabularInline):
     model = ItemLocation
@@ -30,6 +32,9 @@ class ItemAdmin(admin.ModelAdmin):
     inlines = [OwnershipInline, ItemLocationInline, ItemSupplierInline]
     list_display = ('name', 'ours', 'can_borrow')
 
+class EventAdmin(admin.ModelAdmin):
+    list_display = ('name', 'place', 'start_date', 'end_date')
+
 admin.site.register(Location)
 
 admin.site.register(Owner)
@@ -37,6 +42,8 @@ admin.site.register(Owner)
 admin.site.register(Supplier)
 
 admin.site.register(Item, ItemAdmin)
+
+admin.site.register(Event, EventAdmin)
 
 #admin.site.register(Ownership)
 
