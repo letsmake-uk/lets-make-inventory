@@ -13,8 +13,8 @@ from .models import ItemLocation
 from .models import Supplier
 
 from .models import ItemSupplier
-from .models import Event
-from .models import EventStock
+#from .models import Event
+#from .models import EventStock
 
 class ItemLocationInline(admin.TabularInline):
     model = ItemLocation
@@ -28,17 +28,17 @@ class ItemSupplierInline(admin.TabularInline):
     model = ItemSupplier
     extra = 0
 
-class EventStockInline(admin.TabularInline):
-    model = EventStock
-    extra = 0
+# class EventStockInline(admin.TabularInline):
+#     model = EventStock
+#     extra = 0
 
 class ItemAdmin(admin.ModelAdmin):
     inlines = [OwnershipInline, ItemLocationInline, ItemSupplierInline]
     list_display = ('name', 'ours', 'can_borrow')
 
-class EventAdmin(admin.ModelAdmin):
-    inlines = [EventStockInline]
-    list_display = ('name', 'place', 'start_date', 'end_date')
+# class EventAdmin(admin.ModelAdmin):
+#     inlines = [EventStockInline]
+#     list_display = ('name', 'place', 'start_date', 'end_date')
 
 admin.site.register(Location)
 
@@ -48,7 +48,7 @@ admin.site.register(Supplier)
 
 admin.site.register(Item, ItemAdmin)
 
-admin.site.register(Event, EventAdmin)
+#admin.site.register(Event, EventAdmin)
 
 #admin.site.register(Ownership)
 
